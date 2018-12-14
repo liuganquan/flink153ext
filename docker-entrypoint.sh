@@ -20,7 +20,7 @@
 
 ### If unspecified, the hostname of the container is taken as the JobManager address
 JOB_MANAGER_RPC_ADDRESS=${JOB_MANAGER_RPC_ADDRESS:-$(hostname -f)}
-TASK_MANAGER_HEAP_SIZE=${TASK_MANAGER_HEAP_SIZE:-1024}
+##TASK_MANAGER_HEAP_SIZE=${TASK_MANAGER_HEAP_SIZE:-1024}
 ###
 
 if [ "$1" == "--help" -o "$1" == "-h" ]; then
@@ -36,7 +36,7 @@ elif [ "$1" == "taskmanager" ]; then
 
     sed -i -e "s/jobmanager.rpc.address: localhost/jobmanager.rpc.address: ${JOB_MANAGER_RPC_ADDRESS}/g" $FLINK_HOME/conf/flink-conf.yaml
     sed -i -e "s/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: $(grep -c ^processor /proc/cpuinfo)/g" $FLINK_HOME/conf/flink-conf.yaml
-    sed -i -e "s/taskmanager.heap.mb: 1024/taskmanager.heap.mb: ${TASK_MANAGER_HEAP_SIZE}/g" $FLINK_HOME/conf/flink-conf.yaml
+##    sed -i -e "s/taskmanager.heap.mb: 1024/taskmanager.heap.mb: ${TASK_MANAGER_HEAP_SIZE}/g" $FLINK_HOME/conf/flink-conf.yaml
     echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
 
