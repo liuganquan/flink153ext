@@ -20,7 +20,7 @@
 
 ### If unspecified, the hostname of the container is taken as the JobManager address
 JOB_MANAGER_RPC_ADDRESS=${JOB_MANAGER_RPC_ADDRESS:-$(hostname -f)}
-TASK_MANAGER_HEAP_SIZE=${TASK_MANAGER_HEAP_SIZE:1024}
+TASK_MANAGER_HEAP_SIZE=${TASK_MANAGER_HEAP_SIZE:-1024}
 ###
 
 if [ "$1" == "--help" -o "$1" == "-h" ]; then
