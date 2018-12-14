@@ -21,6 +21,7 @@
 # If unspecified, the hostname of the container is taken as the JobManager address
 JOB_MANAGER_RPC_ADDRESS=${JOB_MANAGER_RPC_ADDRESS:-$(hostname -f)}
 TASK_MANAGER_HEAP_SIZE=${TASK_MANAGER_HEAP_SIZE:-1024}
+AKKA_ASK_TIMEOUT=${AKKA_ASK_TIMEOUT:-10 s}
 
 drop_privs_cmd() {
     if [ -x /sbin/su-exec ]; then
@@ -53,7 +54,7 @@ elif [ "$1" = "taskmanager" ]; then
     echo "query.server.port: 6125" >> "$FLINK_HOME/conf/flink-conf.yaml"
     echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
-
+    echo "akka.ask.timeout:  ${AKKA_ASK_TIMEOUT}" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "Starting Task Manager"
     echo "config file: " && grep '^[^\n#]' "$FLINK_HOME/conf/flink-conf.yaml"
     exec $(drop_privs_cmd) flink "$FLINK_HOME/bin/taskmanager.sh" start-foreground
