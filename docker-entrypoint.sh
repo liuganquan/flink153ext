@@ -44,10 +44,10 @@ elif [ "$1" = "jobmanager" ]; then
     sed -i -e "s/jobmanager.heap.mb: 1024/jobmanager.heap.mb: ${JOB_MANAGER_HEAP_SIZE}/g" $FLINK_HOME/conf/flink-conf.yaml
     echo "blob.server.port: 6124" >> "$FLINK_HOME/conf/flink-conf.yaml"
     echo "query.server.port: 6125" >> "$FLINK_HOME/conf/flink-conf.yaml"
-    echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
-    echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
+    #echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
+    #echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "akka.ask.timeout:  ${AKKA_ASK_TIMEOUT}" >> $FLINK_HOME/conf/flink-conf.yaml
-    echo "state.backend.rocksdb.timer-service.factory:  ${TIMMER_SERVICE_FACTORY}" >> $FLINK_HOME/conf/flink-conf.yaml
+    #echo "state.backend.rocksdb.timer-service.factory:  ${TIMMER_SERVICE_FACTORY}" >> $FLINK_HOME/conf/flink-conf.yaml
     
     echo "config file: " && grep '^[^\n#]' "$FLINK_HOME/conf/flink-conf.yaml"
     exec $(drop_privs_cmd) flink "$FLINK_HOME/bin/jobmanager.sh" start-foreground cluster
@@ -59,10 +59,10 @@ elif [ "$1" = "taskmanager" ]; then
     sed -i -e "s/taskmanager.heap.mb: 1024/taskmanager.heap.mb: ${TASK_MANAGER_HEAP_SIZE}/g" $FLINK_HOME/conf/flink-conf.yaml
     echo "blob.server.port: 6124" >> "$FLINK_HOME/conf/flink-conf.yaml"
     echo "query.server.port: 6125" >> "$FLINK_HOME/conf/flink-conf.yaml"
-    echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
-    echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
+    #echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
+    #echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "akka.ask.timeout:  ${AKKA_ASK_TIMEOUT}" >> $FLINK_HOME/conf/flink-conf.yaml
-    echo "state.backend.rocksdb.timer-service.factory:  ${TIMMER_SERVICE_FACTORY}" >> $FLINK_HOME/conf/flink-conf.yaml
+    #echo "state.backend.rocksdb.timer-service.factory:  ${TIMMER_SERVICE_FACTORY}" >> $FLINK_HOME/conf/flink-conf.yaml
     
     echo "Starting Task Manager"
     echo "config file: " && grep '^[^\n#]' "$FLINK_HOME/conf/flink-conf.yaml"
