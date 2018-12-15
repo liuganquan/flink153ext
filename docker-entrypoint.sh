@@ -21,6 +21,7 @@
 # If unspecified, the hostname of the container is taken as the JobManager address
 JOB_MANAGER_RPC_ADDRESS=${JOB_MANAGER_RPC_ADDRESS:-$(hostname -f)}
 TASK_MANAGER_HEAP_SIZE=${TASK_MANAGER_HEAP_SIZE:-1024}
+JOB_MANAGER_HEAP_SIZE=${JOB_MANAGER_HEAP_SIZE:-1024}
 AKKA_ASK_TIMEOUT=${AKKA_ASK_TIMEOUT:-10 s}
 TIMMER_SERVICE_FACTORY=${TIMMER_SERVICE_FACTORY:-RocksDB}
 
@@ -40,9 +41,14 @@ if [ "$1" = "help" ]; then
 elif [ "$1" = "jobmanager" ]; then
     echo "Starting Job Manager"
     sed -i -e "s/jobmanager.rpc.address: localhost/jobmanager.rpc.address: ${JOB_MANAGER_RPC_ADDRESS}/g" "$FLINK_HOME/conf/flink-conf.yaml"
+    sed -i -e "s/jobmanager.heap.mb: 1024/jobmanager.heap.mb: ${JOB_MANAGER_HEAP_SIZE}/g" $FLINK_HOME/conf/flink-conf.yaml
     echo "blob.server.port: 6124" >> "$FLINK_HOME/conf/flink-conf.yaml"
     echo "query.server.port: 6125" >> "$FLINK_HOME/conf/flink-conf.yaml"
-
+    echo "state.backend: rocksdb" >> $FLINK_HOME/conf/flink-conf.yaml
+    echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
+    echo "akka.ask.timeout:  ${AKKA_ASK_TIMEOUT}" >> $FLINK_HOME/conf/flink-conf.yaml
+    echo "state.backend.rocksdb.timer-service.factory:  ${TIMMER_SERVICE_FACTORY}" >> $FLINK_HOME/conf/flink-conf.yaml
+    
     echo "config file: " && grep '^[^\n#]' "$FLINK_HOME/conf/flink-conf.yaml"
     exec $(drop_privs_cmd) flink "$FLINK_HOME/bin/jobmanager.sh" start-foreground cluster
 elif [ "$1" = "taskmanager" ]; then
@@ -57,6 +63,7 @@ elif [ "$1" = "taskmanager" ]; then
     echo "state.backend.fs.checkpointdir: file:///tmp/checkpoints" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "akka.ask.timeout:  ${AKKA_ASK_TIMEOUT}" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "state.backend.rocksdb.timer-service.factory:  ${TIMMER_SERVICE_FACTORY}" >> $FLINK_HOME/conf/flink-conf.yaml
+    
     echo "Starting Task Manager"
     echo "config file: " && grep '^[^\n#]' "$FLINK_HOME/conf/flink-conf.yaml"
     exec $(drop_privs_cmd) flink "$FLINK_HOME/bin/taskmanager.sh" start-foreground
